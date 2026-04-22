@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('community_posts', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('group_id')->constrained('community_groups')->onDelete('cascade');
+            $table->string('title')->nullable();
+            $table->string('slug')->unique();
+            $table->longText('content');
+            $table->string('role_label')->nullable();
+            $table->unsignedBigInteger('week')->nullable();
+            $table->json('image_urls')->nullable();
+            $table->enum('moderation_report_status', ['pending', 'approved', 'removed'])
+              ->default('pending');
+            $table->integer('reported_count')->default(0);
+            $table->timestamp('posted_at')->nullable();
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('community_posts');
+    }
+};

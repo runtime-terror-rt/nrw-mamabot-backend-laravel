@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('movement_restrictions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('log_date');
+            $table->boolean('avoided_heavy_lifting')->default(false);
+            $table->boolean('avoided_sudden_bending')->default(false);
+            $table->boolean('supported_abdomen')->default(false);
+            $table->boolean('rested_when_needed')->default(false);
+            $table->text('notes')->nullable();
+            $table->text('tip')->nullable();
+            $table->timestamps();
+
+            $table->unique(['user_id', 'log_date']);  // prevent duplicate logs
+        });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('movement_restrictions');
+    }
+};

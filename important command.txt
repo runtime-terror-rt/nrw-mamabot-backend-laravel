@@ -1,0 +1,13 @@
+function artisan {
+ docker-compose exec php php artisan $args
+ }
+
+function comp {
+ docker-compose exec php composer $args
+}
+
+function np {
+docker-compose run --rm node npm $args
+}
+
+C:\Users\<YourUsername>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
