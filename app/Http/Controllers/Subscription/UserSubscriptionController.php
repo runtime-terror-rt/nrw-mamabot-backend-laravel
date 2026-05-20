@@ -20,7 +20,6 @@ class UserSubscriptionController extends Controller
     {
         try {
 
-
             $request->validate([
                 'plan_id' => 'required',
             ]);
@@ -119,8 +118,8 @@ class UserSubscriptionController extends Controller
 
     public function handleWebhook(Request $request)
     {
-//        $endpointSecret = env('OUR_STRIPE_WEBHOOK_SECRET');
-        $endpointSecret = "whsec_ofHN7plP7EsY1vGDulltN5QiOBQg8yz1";
+//      $endpointSecret = env('OUR_STRIPE_WEBHOOK_SECRET');
+        $endpointSecret = "whsec_yrypdD5OIxMsezvZFJiU78YyJy1fWSJp";
 
 
         echo "End point secreat = " . $endpointSecret;
