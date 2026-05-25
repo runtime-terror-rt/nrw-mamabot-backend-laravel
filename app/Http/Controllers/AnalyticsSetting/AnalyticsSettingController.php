@@ -26,9 +26,14 @@ class AnalyticsSettingController extends Controller
         }
     }
 
-    public function showByTool()
+    public function showByTool($tool)
     {
-
+        try {
+            $setting = AnalyticsSetting::where('tool',$tool)->first();
+            return response()->json($setting, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Setting not found'], 404);
+        }
     }
 
     // Create new setting
