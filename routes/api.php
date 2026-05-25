@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyticsSetting\AnalyticsSettingController;
 use App\Http\Controllers\Authentication\ForgotPasswordController;
 use App\Http\Controllers\Authentication\LoginController;
 use App\Http\Controllers\Authentication\SignUpController;
@@ -69,17 +70,6 @@ use App\Http\Controllers\WekknessSelfCare\WellnessActivityController;
 
 Route::prefix('v1')->group(function () {
 
-    Route::get('/test-mail', function () {
-
-        SendOtpEmail::dispatch(2, 'verify', 123456);
-    });
-
-    Route::get('/stripe',function ()
-    {
-      return  env('OUR_STRIPE_WEBHOOK_SECRET');
-    });
-
-
     // Public Routes
     Route::post('register', [SignUpController::class, 'register']);         // User registration
     Route::post('verify-otp', [SignUpController::class, 'verifyOtp']);     // OTP verification
@@ -102,13 +92,9 @@ Route::prefix('v1')->group(function () {
     // Public route for users to subscribe
     Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe']);
 
-
-
     // Article Routes
     Route::get('articles/latest', [ArticleController::class, 'latestArticles']);
-
     Route::get('testimonials/random', [TestimonialController::class, 'randomTestimonials']);
-
 
     //Subscription Payment (Stripe)
     Route::get('/subscription/success', [UserSubscriptionController::class, 'subscriptionSuccess'])->name('booking.success');
@@ -153,19 +139,19 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('privacy-data-settings', PrivacyDataController::class);
 
         //User Devices
-        Route::get('user-devices',[PrivacyDataController::class,'userDevices']);
+        Route::get('user-devices', [PrivacyDataController::class, 'userDevices']);
 
         // All notifications for the logged-in user
-        Route::get('notification-logged-in',[NotificationController::class,'notificationLoggedIn']);
+        Route::get('notification-logged-in', [NotificationController::class, 'notificationLoggedIn']);
 
         //Notification for Admin
-        Route::get('notification-admin',[NotificationController::class,'notificationAdmin']);
-        Route::post('global-notification',[NotificationController::class,'globalNotification']);
-        Route::get('global-notification-list',[NotificationController::class,'globalNotificationList']);
-        Route::delete('delete-global-notification/{id}',[NotificationController::class,'deleteGlobalNotification']);
+        Route::get('notification-admin', [NotificationController::class, 'notificationAdmin']);
+        Route::post('global-notification', [NotificationController::class, 'globalNotification']);
+        Route::get('global-notification-list', [NotificationController::class, 'globalNotificationList']);
+        Route::delete('delete-global-notification/{id}', [NotificationController::class, 'deleteGlobalNotification']);
 
         //Mark all as read - Notification
-        Route::post('mark-as-read',[NotificationController::class,'markAsRead']);
+        Route::post('mark-as-read', [NotificationController::class, 'markAsRead']);
 
         // block unblock user
         Route::post('users/toggle-block/{id}', [UserController::class, 'isBlockedUnblockedTogggle']);
@@ -251,7 +237,7 @@ Route::prefix('v1')->group(function () {
         //Recovery Log
 
         Route::apiResource('recovery-logs', RecoveryLogController::class)
-        ->only(['store', 'index']);
+            ->only(['store', 'index']);
 
         //Pelvic log
         Route::apiResource('pelvic-exercise-logs', PelvicExerciseLogController::class)
@@ -259,16 +245,16 @@ Route::prefix('v1')->group(function () {
 
         //PainMovement log
         Route::apiResource('pain-movement-logs', PainMovementLogController::class)
-        ->only(['index', 'store']);
-    //Recovery feeding log
+            ->only(['index', 'store']);
+        //Recovery feeding log
         Route::apiResource('feeding-logs', FeedingLogController::class)
-    ->only(['store', 'index']);
+            ->only(['store', 'index']);
 //diaper-log
-    Route::apiResource('diaper-log', DiaperLogController::class)->only(['store', 'index']);
+        Route::apiResource('diaper-log', DiaperLogController::class)->only(['store', 'index']);
 
-     // Sleeping / Sleep tracking
-    Route::apiResource('sleep-trackings', SleepTrackingController::class)
-        ->only(['store', 'index']);
+        // Sleeping / Sleep tracking
+        Route::apiResource('sleep-trackings', SleepTrackingController::class)
+            ->only(['store', 'index']);
 
         //incision-healing-checks
         Route::apiResource('incision-healing-checks', IncisionHealingCheckController::class)
@@ -276,60 +262,60 @@ Route::prefix('v1')->group(function () {
 
 //movement-restrictions
         Route::apiResource('movement-restrictions', MovementRestrictionController::class)
-         ->only(['index', 'store']);
+            ->only(['index', 'store']);
 //baby-movement-logs
-          Route::apiResource('baby-movement-logs', BabyMovementLogController::class)
-        ->only(['index', 'store']);
+        Route::apiResource('baby-movement-logs', BabyMovementLogController::class)
+            ->only(['index', 'store']);
 
 //hydration-logs
         Route::apiResource('hydration-logs', HydrationLogController::class)
-        ->only(['index', 'store']);
+            ->only(['index', 'store']);
         //mother-wellness-logs
         Route::apiResource('mother-wellness-logs', MotherWellnessLogController::class)
-        ->only(['index', 'store']);
+            ->only(['index', 'store']);
 
         //mental-health-logs
-         Route::apiResource('mental-health-logs', MentalHealthLogController::class)->only(['index', 'store']);
+        Route::apiResource('mental-health-logs', MentalHealthLogController::class)->only(['index', 'store']);
 //nutrition-logs
-          Route::apiResource('nutrition-logs', NutritionLogController::class)
-        ->only(['index', 'store']);
+        Route::apiResource('nutrition-logs', NutritionLogController::class)
+            ->only(['index', 'store']);
 //baby-cue-logs
-         Route::apiResource('baby-cue-logs', BabyCueLogController::class)
-        ->only(['index', 'store']);
+        Route::apiResource('baby-cue-logs', BabyCueLogController::class)
+            ->only(['index', 'store']);
         //AI pregnancy-foods
-      Route::apiResource('pregnancy-foods', PregnancyFoodController::class)
-    ->only(['index', 'store']);
-    Route::get('pregnancy-foods/fetch', [PregnancyFoodController::class, 'fetchFoodList']);
-    //AI pregnancy-food-weekly-logs
-Route::apiResource('pregnancy-food-weekly-logs', PregnancyFoodWeeklyLogController::class)
-    ->only(['index', 'store']);
+        Route::apiResource('pregnancy-foods', PregnancyFoodController::class)
+            ->only(['index', 'store']);
+        Route::get('pregnancy-foods/fetch', [PregnancyFoodController::class, 'fetchFoodList']);
+        //AI pregnancy-food-weekly-logs
+        Route::apiResource('pregnancy-food-weekly-logs', PregnancyFoodWeeklyLogController::class)
+            ->only(['index', 'store']);
 
 //pregnancy-food-recipes
-    Route::apiResource('pregnancy-food-recipes', PregnancyFoodRecipeController::class)
-    ->only(['index', 'store']);
+        Route::apiResource('pregnancy-food-recipes', PregnancyFoodRecipeController::class)
+            ->only(['index', 'store']);
 
 //pregnancy-food-meal-plans
-      Route::apiResource('pregnancy-food-meal-plans', PregnancyFoodMealPlanController::class)
-        ->only(['index', 'store']);
+        Route::apiResource('pregnancy-food-meal-plans', PregnancyFoodMealPlanController::class)
+            ->only(['index', 'store']);
 
         // AI Pregnancy Products
-Route::apiResource('pregnancy-products', PregnancyProductController::class)
-    ->only(['index', 'store']);
-    Route::get('pregnancy-products/fetch', [PregnancyProductController::class, 'fetch']);
+        Route::apiResource('pregnancy-products', PregnancyProductController::class)
+            ->only(['index', 'store']);
+        Route::get('pregnancy-products/fetch', [PregnancyProductController::class, 'fetch']);
 //AI daily-insights
-    Route::apiResource('daily-insights', DailyInsightController::class)
-    ->only(['index', 'store']);
+        Route::apiResource('daily-insights', DailyInsightController::class)
+            ->only(['index', 'store']);
 
 //ai postpartum-daily-tips
-    Route::apiResource('postpartum-daily-tips', PostpartumDailyTipController::class)
-    ->only(['index', 'store']);
+        Route::apiResource('postpartum-daily-tips', PostpartumDailyTipController::class)
+            ->only(['index', 'store']);
 //ai-chat-logs
-    Route::apiResource('ai-chat-logs', AiChatLogController::class)
-    ->only(['index', 'store']);
+        Route::apiResource('ai-chat-logs', AiChatLogController::class)
+            ->only(['index', 'store']);
 
-    Route::get('ai-chat-logs/user-history', [AiChatLogController::class, 'getUserChatHistory']);
+        Route::get('ai-chat-logs/user-history', [AiChatLogController::class, 'getUserChatHistory']);
 
-    Route::get('chat-quota', [AiChatLogController::class, 'getChatQuota']);
+        Route::get('chat-quota', [AiChatLogController::class, 'getChatQuota']);
 
         // About Us Routes
         Route::post('/about-us/save', [AboutUsController::class, 'save']);
@@ -391,28 +377,35 @@ Route::apiResource('pregnancy-products', PregnancyProductController::class)
         Route::get('/popular-topics', [CommunityInteractionController::class, 'getPopularTopics']);
 
         //Payment information for Logged-in user
-        Route::get('/payment-info-by-user',[PaymentController::class, 'getPaymentInfoByUser']);
+        Route::get('/payment-info-by-user', [PaymentController::class, 'getPaymentInfoByUser']);
 
         //delete-user
-        Route::get('/delete-user',[ProfileController::class, 'deleteUser']);
+        Route::get('/delete-user', [ProfileController::class, 'deleteUser']);
 
         //Change Password
-        Route::post('/change-password',[ProfileController::class, 'changeUserPassword']);
+        Route::post('/change-password', [ProfileController::class, 'changeUserPassword']);
 
         // Wellness Activities self-care
         Route::post('wellness-activities-save', [WellnessActivityController::class, 'storeOrUpdate']);
         Route::get('wellness-activities', [WellnessActivityController::class, 'getWellnessActivities']);
         Route::delete('wellness-activities/{id}', [WellnessActivityController::class, 'destroy']);
 
+
+
     });
-        Route::get('articles/{id}', [ArticleController::class, 'show']);
+    Route::get('articles/{id}', [ArticleController::class, 'show']);
 
-        //Payments
-        Route::apiResource('payments', PaymentController::class);
+    //Payments
+    Route::apiResource('payments', PaymentController::class);
 
-        //Subscriber List
-        Route::get('subscribers',[UserSubscriptionController::class, 'getSubscribers']);
+    //Subscriber List
+    Route::get('subscribers', [UserSubscriptionController::class, 'getSubscribers']);
 
-
-
+    // Analytics
+    Route::get('analytics', [AnalyticsSettingController::class, 'index']);
+    Route::get('analytics/{tool}', [AnalyticsSettingController::class, 'showByTool']);
+    Route::get('analytics/{id}', [AnalyticsSettingController::class, 'show']);
+    Route::post('analytics', [AnalyticsSettingController::class, 'store']);
+    Route::put('analytics/{id}', [AnalyticsSettingController::class, 'update']);
+    Route::delete('analytics/{id}', [AnalyticsSettingController::class, 'destroy']);
 });

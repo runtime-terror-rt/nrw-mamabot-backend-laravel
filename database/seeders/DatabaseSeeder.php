@@ -14,7 +14,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             SubscriptionPlanSeeder::class,
-            UserSubscriptionSeeder::class
+            UserSubscriptionSeeder::class,
+            AnalyticsSettingsSeeder::class
+
         ]);
     }
 }
